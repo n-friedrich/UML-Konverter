@@ -1,0 +1,15 @@
+@startSequence
+
+title:"Titel",
+
+participant:"Sequenparticipant" {
+	comment:"Kommentar",
+}
+
+connections {
+	"Part. 1">"Part. 2", #normaler Pfeil
+	"Part. 2"->'Beschriftung'"Part. 3", #gestrichelter Pfeil
+	"Part. 1"|>"Part. 3", #geschlossener Pfeil
+}
+
+@end

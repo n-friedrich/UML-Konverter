@@ -1,0 +1,38 @@
+@startActivities
+
+title:"Titel",
+
+activiy:"Aktivität" {
+	noteLeft:"Eine kurze Notitz links",
+	noteRight {
+		"Dies ist eine laaaaange Notitz auf der rechten Seite"
+		"mit einem festgelegten Zeilenumbruch."
+	}
+}
+
+if:"Bedingung" {
+	is:"yes" {
+		activity:"Ja Aktivität",
+	}
+	is:"no" {
+		activity:"Erste Nein Aktivität",
+		activity:"Zweite Nein Aktivität",
+	}
+}
+
+do {
+	activity:"1",
+	activity:"2",
+} doWhile:"Bedingung",
+
+while:"Bedingung" {
+	activity:"1",
+	activity:"2",
+}
+
+parallel {
+	activity:"Erste Parallele Aktivität",
+	activity:"Zweite Parallele Aktivität",
+}
+
+@end

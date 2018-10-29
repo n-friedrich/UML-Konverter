@@ -1,0 +1,19 @@
+@startUseCases
+
+title:"Titel",
+
+package:"Package" {
+	useCase:<Stereotyp>"UseCaseName",
+	
+	actor:<Stereotyp>"Actorname",
+	
+	connections {
+		"Actor1"|>"Actor2", #Geschlossener Pfeil
+		"useCase1"->"useCase3", #Gestrichelter Pfeil
+		"Actor3">'Pfeilbeschriftung'"useCase4", #Offener Pfeil
+	}
+}
+
+useCase:"Außen UseCase",
+
+@end

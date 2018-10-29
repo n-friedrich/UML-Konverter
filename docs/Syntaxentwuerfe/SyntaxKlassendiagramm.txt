@@ -1,0 +1,41 @@
+@startClasses
+
+title:"Titel",
+
+package:"Package" {
+	class:<Generics Tag>"Klasssenname" {
+		variables {
+			"+Variable1",
+			"-Variable2",
+		}
+		methods {
+			"Methode1",
+			"Methode2",
+		}
+	}
+	
+	class:"Klassenname2",
+	
+	enum:"Enumname",
+	
+	interface:"Interfacename",
+	
+	abstract:"Abstraktklassenname",
+	
+	annotaion:"Annotationname",
+	
+	connections {
+		"Klasse1"|>"Klasse2", #Vererbung
+		"Klasse1"->"Klasse3", #Interface
+		"Klasse2">'Pfeilbeschriftung'"Klasse4", #Beinhaltet
+		"Klasse3"<>'2'"Klasse4", #Rautenpfeil(Mehrfachbeinhaltung)
+	}
+}
+
+class:"Außenklasse",y
+
+connections {
+	#weiter Verbindungen
+}
+
+@end
