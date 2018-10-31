@@ -1,0 +1,6 @@
+[package]
+name = "UML-Konverter"
+version = "0.1.0"
+authors = ["agrellmann <andre.grellmann@fh-bielefeld.de>"]
+
+[dependencies]
