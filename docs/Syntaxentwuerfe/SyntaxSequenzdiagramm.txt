@@ -2,7 +2,7 @@
 
 title:"Titel",
 
-participant:"Sequenparticipant" {
+participant:"Sequenzparticipant" {
 	comment:"Kommentar",
 }
 
