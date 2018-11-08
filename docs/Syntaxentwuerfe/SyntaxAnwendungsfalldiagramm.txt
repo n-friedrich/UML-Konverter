@@ -2,7 +2,7 @@
 
 title:"Titel",
 
-package:"Package" {
+systemBoundary:"Kundeninformationssystem" {
 	useCase:<Stereotyp>"UseCaseName",
 	
 	actor:<Stereotyp>"Actorname",
