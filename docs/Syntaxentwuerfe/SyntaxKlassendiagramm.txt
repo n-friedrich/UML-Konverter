@@ -27,6 +27,7 @@ package:"Package" {
 	connections {
 		"Klasse1"|>"Klasse2", #Vererbung
 		"Klasse1"->"Klasse3", #Interface
+		"Klasse4"-"Klasse3", #Gestrichelte Linie
 		"Klasse2">'Pfeilbeschriftung'"Klasse4", #Beinhaltet
 		"Klasse3"<>'2'"Klasse4", #Rautenpfeil(Mehrfachbeinhaltung)
 	}
