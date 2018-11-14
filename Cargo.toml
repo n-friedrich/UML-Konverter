@@ -4,3 +4,5 @@ version = "0.1.0"
 authors = ["agrellmann <andre.grellmann@fh-bielefeld.de>"]
 
 [dependencies]
+imageproc = "0.16.0"
+image = "0.20.1"
