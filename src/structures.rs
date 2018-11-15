@@ -1,3 +1,17 @@
+#[derive(Debug)]
+pub enum Diagramtype {
+    ACTIVITY,
+    USECASE,
+    CLASSES,
+    SEQUENCE,
+    NONE,
+}
+
+pub enum Problem {
+    NONE,
+    WRONGLINE(i32),
+}
+
 pub struct Connection {
     node1: String, //Nodename 1
     node2: String, //Nodename 2
@@ -7,7 +21,7 @@ pub struct Connection {
 
 pub struct Node {
     //Fuer Klassen und Anwendungen
-    type: String, //Nodetyp (Name) evtl erstetzen mit enum
+    nodetype: String, //Nodetyp (Name) evtl erstetzen mit enum
     name: String, //Name des Nodes
     stereotype: String, //Stereotyp des Nodes
     variables: Vec<String>, //Liste mit Variablen
@@ -56,7 +70,7 @@ pub struct Parallel {
 }
 
 pub struct Diagram {
-    type: String, //Diagrammtyp wie in Diagramm evtl ersetzen mit enum
+    diagramtype: String, //Diagrammtyp wie in Diagramm evtl ersetzen mit enum
     name: String, //Diagrammname
     packages: Vec<Package>, //Liste mit allen Packages
     nodes: Vec<Node>, //Liste mit allen Nodes außerhalb von Packages
