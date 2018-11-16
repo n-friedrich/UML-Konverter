@@ -9,6 +9,7 @@ pub enum Diagramtype {
 
 pub enum Problem {
     NONE,
+    NOSTART,
     WRONGLINE(i32),
 }
 
@@ -70,7 +71,6 @@ pub struct Parallel {
 }
 
 pub struct Diagram {
-    diagramtype: String, //Diagrammtyp wie in Diagramm evtl ersetzen mit enum
     name: String, //Diagrammname
     packages: Vec<Package>, //Liste mit allen Packages
     nodes: Vec<Node>, //Liste mit allen Nodes außerhalb von Packages

@@ -3,7 +3,7 @@
 title:"Titel",
 
 package:"Package" {
-	class:<Generics Tag>"Klasssenname" {
+	class:<GenericsTag>"Klassenname" {
 		variables {
 			"+Variable1",
 			"-Variable2",
@@ -33,7 +33,7 @@ package:"Package" {
 	}
 }
 
-class:"Außenklasse",y
+class:"Außenklasse",
 
 connections {
 	#weitere Verbindungen
