@@ -1,24 +1,35 @@
+extern crate regex;
 use regex::Regex;
 use std::io::BufReader;
 use std::io::BufRead;
 use std::fs::File;
-use std::collections::HashMap;
+//use std::collections::HashMap;
 use structures;
-use regexCollection;
-use regexCollection::Regexpiece;
+//use regexCollection;
+//use regexCollection::Regexpiece;
 
-pub fn parse_classes(filename: String, regexe: HashMap<regexCollection::Regexpiece, &str>,
-problem: &structures::Problem) -> structures::Diagram {   
+pub fn parse_classes(filename: String) -> structures::Diagram {   
     let f = File::open(filename).unwrap();
     let file = BufReader::new(&f);
     let mut diagram: structures::Diagram;
+    diagram = structures::Diagram {
+        problems: Vec::new(),
+        name: String::new(),
+        packages: Vec::new(),
+        nodes: Vec::new(),
+        connections: Vec::new(),
+    };
+    let mut problemliste: Vec<structures::Problem> = Vec::new();
     for (num, line) in file.lines().enumerate() {
         let l = line.unwrap();
         if num == 0 {
-            let re = Regex::new(regexe.get(&Regexpiece::START)).unwrap();
-            if !re.is_match(l) {
-                *problem = structures::Problem::NOSTART;
+            let re = Regex::new(r"\s*@start\w").unwrap();
+            if !re.is_match(&l) {
+                problemliste.push(structures::Problem::NOSTART);
+                diagram.problems = problemliste;
                 return diagram;
+            } else {
+                println!("Start gefunden!");
             }
         }
         
@@ -41,4 +52,3 @@ pub fn get_diagram_type(filename: String) -> structures::Diagramtype {
         _ => return structures::Diagramtype::NONE,
     }
 }
-
