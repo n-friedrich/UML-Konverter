@@ -3,59 +3,42 @@ use regex::Regex;
 use std::fs::File;
 use std::io::BufRead;
 use std::io::BufReader;
-use std::io::Lines;
-use std::iter::Enumerate;
 //use std::collections::HashMap;
 use structures;
 //use regexCollection;
 //use regexCollection::Regexpiece;
 
 pub fn parse_classes(filename: String) -> structures::Diagram {
+    let filename2 = filename.clone();
     let f = File::open(filename).unwrap();
     let reader = BufReader::new(&f);
     let file = reader.lines().enumerate();
     let mut has_title = false;
-    let mut in_package = false;
-    let mut in_node = false;
-    let mut strCache: String;
 
-    let mut diagram: structures::Diagram;
-    diagram = structures::Diagram {
+    let mut diagram = structures::Diagram {
         problems: Vec::new(),
         name: String::new(),
         packages: Vec::new(),
         nodes: Vec::new(),
         connections: Vec::new(),
     };
-    let mut package: structures::Package;
-    package = structures::Package {
-        name: String::new(),
-        nodes: Vec::new(),
-        connections: Vec::new(),
-    };
-    let mut node: structures::Node;
-    node = structures::Node {
-        name: String::new(),
-        nodetype: structures::Nodetype::CLASS,
-        stereotype: String::new(),
-        variables: Vec::new(),
-        methods: Vec::new(),
-    };
 
-    let re_comment = Regex::new(r"\s*(#[^\n\r]*\s*)?(\r|\n)+").unwrap();
-    let re_title = Regex::new(r##"\s*title:"(\w+)""##).unwrap();
-    let re_package = Regex::new(r##"\s*package:"(\w+)"\s*(\{|,)"##).unwrap();
-    let re_class = Regex::new(r##"\s*class:(<\w+>)?"(\w+)"\s*(\{|,)"##).unwrap();
+    //let re_comment = Regex::new(r"\s*(#[^\n\r]*\s*)?(\r|\n)+").unwrap();
+    let re_title = Regex::new(r##"\s*title:"(\w+)""##).unwrap(); //geprüft
+    let re_package = Regex::new(r##"\s*package:"(\w+)"\s*\{"##).unwrap();
+    let re_node = Regex::new(r##"\s*(\w+)\s*:\s*(<[\w\s]+>)?\s*"(\w+)"\s*(\{|,)"##).unwrap(); //geprüft
+    let re_connections = Regex::new(r##"\s*connections\s*\{"##).unwrap(); //geprüft
+    let re_end = Regex::new(r"\s*@end").unwrap(); //geprüft
 
-    let mut problemliste: Vec<structures::Problem> = Vec::new();
+    let mut skip_to = 0;
+    let mut finished = false;
 
     for (num, line) in file {
         let l = line.unwrap();
         if num == 0 {
-            let re = Regex::new(r"\s*@start\w").unwrap();
+            let re = Regex::new(r"\s*@start\w").unwrap(); //geprüft
             if !re.is_match(&l) {
-                problemliste.push(structures::Problem::NOSTART);
-                diagram.problems = problemliste;
+                diagram.problems.push(structures::Problem::NOSTART);
                 return diagram;
             } else {
                 //println!("Start gefunden!");
@@ -67,64 +50,32 @@ pub fn parse_classes(filename: String) -> structures::Diagram {
                     //println!("Titel gefunden!");
                     has_title = true;
                 }
-            }
-            if in_package {
-                //Neue Package Funktion unten
-                if in_node {
-
-                } else {
-                    if re_class.is_match(&l) {
-                        //Klasse innerhalb von Packages
-                        let cache = re_class.captures(&l).unwrap();
-                        node = structures::Node {
-                            name: String::from(&cache[2]),
-                            nodetype: structures::Nodetype::CLASS,
-                            stereotype: String::from(&cache[1]),
-                            variables: Vec::new(),
-                            methods: Vec::new(),
-                        };
-                        if cache[2] == *"," {
-                            package.nodes.push(node);
-                        } else {
-                            in_node = true;
-                        }
+            } else if !(num <= skip_to) && !finished {
+                if re_end.is_match(&l) {
+                    finished = true;
+                } else if re_package.is_match(&l) {
+                    let pcache = read_package(filename2.clone(), num, String::from(&re_package.captures(&l).unwrap()[1]));
+                    diagram.packages.push(pcache.pack);
+                    for p in pcache.problems {
+                        diagram.problems.push(p);
                     }
-                }
-            } else if in_node {
-
-            } else {
-                if re_package.is_match(&l) {
-                    //Package
-                    let cache = re_package.captures(&l).unwrap();
-                    package = structures::Package {
-                        name: String::from(&cache[1]),
-                        nodes: Vec::new(),
-                        connections: Vec::new(),
-                    };
-                    if cache[2] == *"," {
-                        sendpkg = structures::Package {
-                            name: String::from(package.name),
-                            nodes: package.nodes.Clone(),
-                        };
-                        diagram.packages.push(sendpkg);
-                    } else {
-                        in_package = true;
+                    skip_to = pcache.fin_line;
+                } else if re_node.is_match(&l) {
+                    let ncache = read_node(filename2.clone(), num, re_node.captures(&l).unwrap());
+                    diagram.nodes.push(ncache.new_node);
+                    for p in ncache.problems {
+                        diagram.problems.push(p);
                     }
-                } else if re_class.is_match(&l) {
-                    //Klasse außerhalb von Packages
-                    let cache = re_class.captures(&l).unwrap();
-                    node = structures::Node {
-                        name: String::from(&cache[2]),
-                        nodetype: structures::Nodetype::CLASS,
-                        stereotype: String::from(&cache[1]),
-                        variables: Vec::new(),
-                        methods: Vec::new(),
-                    };
-                    if cache[2] == *"," {
-                        diagram.nodes.push(node);
-                    } else {
-                        in_node = true;
+                    skip_to = ncache.fin_line;
+                } else if re_connections.is_match(&l) {
+                    let ccache = read_connections(filename2.clone(), num);
+                    for c in ccache.conns {
+                        diagram.connections.push(c);
                     }
+                    for p in ccache.problems {
+                        diagram.problems.push(p);
+                    }
+                    skip_to = ccache.fin_line;
                 }
             }
         }
@@ -148,29 +99,49 @@ pub fn get_diagram_type(filename: String) -> structures::Diagramtype {
     }
 }
 
-fn read_package(filename: String, place: usize, pname: String) -> package_return {
-    let mut np = structures::Package {
+fn read_package(filename: String, mut place: usize, pname: String) -> package_return {
+    let np = structures::Package {
         name: pname,
         nodes: Vec::new(),
         connections: Vec::new(),
     };
     let mut pr = package_return {
         pack: np,
+        problems: Vec::new(),
         fin_line: place,
     };
 
-    let re_node = Regex::new(r##"\s*(\w+)\s*:\s*(<[\w\s]+>)?\s*"(\w+)"\s*(\{|,)"##).unwrap();
-    let re_comment = Regex::new(r"\s*(#[^\n\r]*\s*)?(\r|\n)+").unwrap();
-    let re_end = Regex::new(r##"\s*\}"##).unwrap();
+    let re_node = Regex::new(r##"\s*(\w+)\s*:\s*(<[\w\s]+>)?\s*"(\w+)"\s*(\{|,)"##).unwrap(); //geprüft
+    let re_connections = Regex::new(r##"\s*connections\s*\{"##).unwrap(); //geprüft
+    //let re_comment = Regex::new(r"\s*(#[^\n\r]*\s*)?(\r|\n)+").unwrap();
+    let re_end = Regex::new(r##"\s*\}"##).unwrap(); //geprüft
 
+    let filename2 = filename.clone();
     let f = File::open(filename).unwrap();
     let reader = BufReader::new(&f);
     let mut finished = false;
     for (num, line) in reader.lines().enumerate() {
         if !(num <= place) && !finished {
             let l = line.unwrap();
-            if re_node.is_match(&l) {
-                let cache = re_node.captures(&l).unwrap();
+            if re_end.is_match(&l) {
+                finished = true;
+                pr.fin_line = num;
+            } else if re_node.is_match(&l) {
+                let node_cache = read_node(filename2.clone(), num, re_node.captures(&l).unwrap());
+                for p in node_cache.problems {
+                    pr.problems.push(p);
+                }
+                place = node_cache.fin_line;
+                pr.pack.nodes.push(node_cache.new_node);
+            } else if re_connections.is_match(&l) {
+                let con_cache = read_connections(filename2.clone(), num);
+                for p in con_cache.problems {
+                    pr.problems.push(p);
+                }
+                place = con_cache.fin_line;
+                for conn in con_cache.conns {
+                    pr.pack.connections.push(conn);
+                }
             }
         }
     }
@@ -178,8 +149,8 @@ fn read_package(filename: String, place: usize, pname: String) -> package_return
     return pr;
 }
 
-fn read_node(filename: String, place: usize, ninhalt: regex::Captures) -> node_return {
-    let mut new_node = structures::Node {
+fn read_node(filename: String, mut place: usize, ninhalt: regex::Captures) -> node_return {
+    let new_node = structures::Node {
         nodetype: structures::Nodetype::CLASS,
         name: String::from(&ninhalt[3]),
         stereotype: String::from(&ninhalt[2]),
@@ -208,6 +179,7 @@ fn read_node(filename: String, place: usize, ninhalt: regex::Captures) -> node_r
         let re_varmet = Regex::new(r##"\s*(\w+)\s*\{"##).unwrap(); //geprüft
         let re_end = Regex::new(r##"\s*\}"##).unwrap(); //geprüft
 
+        let filename2 = filename.clone();
         let f = File::open(filename).unwrap();
         let reader = BufReader::new(&f);
         for (num, line) in reader.lines().enumerate() {
@@ -220,20 +192,28 @@ fn read_node(filename: String, place: usize, ninhalt: regex::Captures) -> node_r
                     let cache = re_varmet.captures(&l).unwrap();
                     match &cache[1] {
                         "variables" => {
-                            let ca_var = read_classcontent(filename, num);
-                            nr.new_node.variables = ca_var.content;
+                            let ca_var = read_classcontent(filename2.clone(), num);
+                            for var in ca_var.content {
+                                nr.new_node.variables.push(var);
+                            }
                             place = ca_var.fin_line;
                         }
                         "methods" => {
-                            let ca_met = read_classcontent(filename, num);
-                            nr.new_node.methods = ca_met.content;
+                            let ca_met = read_classcontent(filename2.clone(), num);
+                            for met in ca_met.content {
+                                nr.new_node.methods.push(met);
+                            }
                             place = ca_met.fin_line;
                         }
                         "connections" => {
-                            let ca_conn = read_connections(filename, num);
-                            nr.new_node.connections = ca_conn.conns;
+                            let ca_conn = read_connections(filename2.clone(), num);
+                            for conn in ca_conn.conns {
+                                nr.new_node.connections.push(conn);
+                            }
                             place = ca_conn.fin_line;
-                            for p in ca_conn.problems {nr.problems.push(p);}
+                            for p in ca_conn.problems {
+                                nr.problems.push(p);
+                            }
                         }
                         _ => nr.problems.push(structures::Problem::UNKNOWN(num)),
                     }
@@ -321,6 +301,7 @@ fn read_connections(filename: String, place: usize) -> connections_return {
 
 struct package_return {
     pack: structures::Package,
+    problems: Vec<structures::Problem>,
     fin_line: usize,
 }
 struct node_return {

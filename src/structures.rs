@@ -9,7 +9,6 @@ pub enum Diagramtype {
 
 #[derive(Debug)]
 pub enum Problem {
-    NONE,
     NOSTART,
     WRONGLINE(usize),
     UNKNOWN(usize),
