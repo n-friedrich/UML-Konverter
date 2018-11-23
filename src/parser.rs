@@ -156,7 +156,6 @@ fn read_node(filename: String, mut place: usize, ninhalt: regex::Captures) -> no
         stereotype: String::from(&ninhalt[2]),
         variables: Vec::new(),
         methods: Vec::new(),
-        connections: Vec::new(),
     };
     let mut nr = node_return {
         new_node: new_node,
@@ -204,16 +203,6 @@ fn read_node(filename: String, mut place: usize, ninhalt: regex::Captures) -> no
                                 nr.new_node.methods.push(met);
                             }
                             place = ca_met.fin_line;
-                        }
-                        "connections" => {
-                            let ca_conn = read_connections(filename2.clone(), num);
-                            for conn in ca_conn.conns {
-                                nr.new_node.connections.push(conn);
-                            }
-                            place = ca_conn.fin_line;
-                            for p in ca_conn.problems {
-                                nr.problems.push(p);
-                            }
                         }
                         _ => nr.problems.push(structures::Problem::UNKNOWN(num)),
                     }
