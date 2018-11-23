@@ -11,19 +11,39 @@ pub enum Diagramtype {
 pub enum Problem {
     NONE,
     NOSTART,
-    WRONGLINE(i32),
+    WRONGLINE(usize),
+}
+
+#[derive(Debug)]
+pub enum Nodetype {
+    CLASS,
+    ENUM,
+    INTERFACE,
+    ABSTRACT,
+    ANNOTATION,
+    UNKNOWN(usize),
+}
+
+#[derive(Debug)]
+pub enum Conntype {
+    VERERBUNG,
+    INTERFACE,
+    GESTRICHELT,
+    BEINHALTET,
+    KOMPOSITION,
+    AGGREGATION,
 }
 
 pub struct Connection {
     pub node1: String, //Nodename 1
     pub node2: String, //Nodename 2
     pub description: String, //Anmerkungen am Pfeil
-    pub contype: String, //Verbindungstyp wie in Diagramm evtl ersetzen mit enum
+    pub contype: Conntype, //Verbindungstyp wie in Diagramm
 }
 
 pub struct Node {
     //Fuer Klassen und Anwendungen
-    pub nodetype: String, //Nodetyp (Name) evtl erstetzen mit enum
+    pub nodetype: Nodetype, //Nodetyp
     pub name: String, //Name des Nodes
     pub stereotype: String, //Stereotyp des Nodes
     pub variables: Vec<String>, //Liste mit Variablen
