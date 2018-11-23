@@ -12,6 +12,7 @@ pub enum Problem {
     NONE,
     NOSTART,
     WRONGLINE(usize),
+    UNKNOWN(usize),
 }
 
 #[derive(Debug)]
@@ -48,6 +49,7 @@ pub struct Node {
     pub stereotype: String, //Stereotyp des Nodes
     pub variables: Vec<String>, //Liste mit Variablen
     pub methods: Vec<String>, //Liste mit Methoden
+    pub connections: Vec<Connection>, //Liste mit Connections
 }
 
 pub struct Package {
