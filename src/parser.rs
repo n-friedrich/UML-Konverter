@@ -26,7 +26,7 @@ pub fn parse_classes(filename: String) -> structures::Diagram {
     //let re_comment = Regex::new(r"\s*(#[^\n\r]*\s*)?(\r|\n)+").unwrap();
     let re_title = Regex::new(r##"\s*title:"(\w+)""##).unwrap(); //geprüft
     let re_package = Regex::new(r##"\s*package:"(\w+)"\s*\{"##).unwrap();
-    let re_node = Regex::new(r##"\s*(\w+)\s*:\s*(<[\w\s]+>)?\s*"(\w+)"\s*(\{|,)"##).unwrap(); //geprüft
+    let re_node = Regex::new(r##"\s*(\w+)\s*:\s*(<[\w\s]*>)\s*"(\w+)"\s*(\{|,)"##).unwrap(); //geprüft
     let re_connections = Regex::new(r##"\s*connections\s*\{"##).unwrap(); //geprüft
     let re_end = Regex::new(r"\s*@end").unwrap(); //geprüft
 
@@ -111,7 +111,7 @@ fn read_package(filename: String, mut place: usize, pname: String) -> package_re
         fin_line: place,
     };
 
-    let re_node = Regex::new(r##"\s*(\w+)\s*:\s*(<[\w\s]+>)?\s*"(\w+)"\s*(\{|,)"##).unwrap(); //geprüft
+    let re_node = Regex::new(r##"\s*(\w+)\s*:\s*(<[\w\s]*>)\s*"(\w+)"\s*(\{|,)"##).unwrap(); //geprüft
     let re_connections = Regex::new(r##"\s*connections\s*\{"##).unwrap(); //geprüft
     //let re_comment = Regex::new(r"\s*(#[^\n\r]*\s*)?(\r|\n)+").unwrap();
     let re_end = Regex::new(r##"\s*\}"##).unwrap(); //geprüft
@@ -249,7 +249,7 @@ fn read_connections(filename: String, place: usize) -> connections_return {
     };
 
     let mut finished = false;
-    let re_conn = Regex::new(r##"\s*"(\w+)"\s*([|<>-]+)\s*('[^']*')?\s*"(\w+)"\s*,"##).unwrap(); //geprüft
+    let re_conn = Regex::new(r##"\s*"(\w+)"\s*([|<>-]+)\s*('[^']*')\s*"(\w+)"\s*,"##).unwrap(); //geprüft
     let re_end = Regex::new(r##"\s*\}"##).unwrap();
     let f = File::open(filename).unwrap();
     let reader = BufReader::new(&f);

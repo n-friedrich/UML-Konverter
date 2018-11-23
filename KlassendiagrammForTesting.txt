@@ -3,7 +3,7 @@
 title:"Titel",
 
 package:"Package" {
-	class:<Generics Tag>"Klasssenname" {
+	class:<Generics Tag>"Klassenname" {
 		variables {
 			"+Variable1",
 			"-Variable2",
@@ -14,30 +14,32 @@ package:"Package" {
 		}
 	}
 	
-	class:"Klassenname2",
+	class:<>"Klassenname2",
 	
-	enum:"Enumname",
+	enum:<>"Enumname",
 	
-	interface:"Interfacename",
+	interface:<>"Interfacename",
 	
-	abstract:"Abstraktklassenname",
+	abstract:<>"Abstraktklassenname",
 	
-	annotation:"Annotationname",
+	annotation:<>"Annotationname",
 	
 	connections {
-		"Klasse1"|>"Klasse2", #Vererbung
-		"Klasse1"->"Klasse3", #Interface
-		"Klasse4"-"Klasse3", #Gestrichelte Linie
+		"Klasse1"|>''"Klasse2", #Vererbung
+		"Klasse1"->''"Klasse3", #Interface
+		"Klasse4"-''"Klasse3", #Gestrichelte Linie
 		"Klasse2">'Pfeilbeschriftung'"Klasse4", #Beinhaltet
 		"Klasse3"<>'2'"Klasse4", #Rautenpfeil(Aggregation)
-		"Klasse5"<|>"Klasse3", #geschlossener Rautenpfeil(Komposition)
+		"Klasse5"<|>''"Klasse3", #geschlossener Rautenpfeil(Komposition)
 	}
 }
 
-class:"Außenklasse",
+class:<>"Außenklasse",
 
 connections {
 	#weitere Verbindungen
 }
 
 @end
+
+#Achtung: <> bei den Klassen und '' bei den VErbindungen müssen immer vorhanden sein!
