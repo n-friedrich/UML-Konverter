@@ -8,9 +8,15 @@ pub enum Diagramtype {
 }
 
 #[derive(Debug)]
+#[derive(PartialEq)]
 pub enum Problem {
+    NONE,
+    NOFILE,
+    NOTYPE,
     NOSTART,
     WRONGLINE(usize),
+    MISSINGARGUMENTS(usize),
+    NOENDOFSCOPE(usize),
     UNKNOWN(usize),
 }
 
