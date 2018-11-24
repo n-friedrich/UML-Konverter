@@ -1,11 +1,12 @@
 use parser;
 use structures;
 
-pub fn test_klassendiagramm(debug: bool) {
+pub fn test_klassendiagramm(filename: String, debug: bool) {
     println!("Starte Klassendiagrammtest:\n");
     let success: bool;
     //println!("Enum: {:?}", parser::get_diagram_type(String::from("./KlassendiagrammForTesting.txt")));
-    let d = parser::parse_classes(String::from("./docs/Syntaxentwuerfe/KlassendiagrammForTesting.txt"),debug,);
+    //let d = parser::parse_classes(String::from("./docs/Syntaxentwuerfe/KlassendiagrammForTesting.txt"), debug);
+    let d = parser::parse_classes(filename, debug);
     let mut diagram = structures::Diagram {
         problems: Vec::new(),
         name: String::from("Fail"),
