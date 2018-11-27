@@ -1,0 +1,6 @@
+Start: \s*@start\w + Comment
+Titel: \s*title:"?P<name>\w+" + Comment
+End: \s*@end\ + Comment
+Comment: \s*#[^\n\r]*\s*(\r|\n)+
+Empty: \s*(\r|\n)+
+Package: \s*package:"?P<name>\w+" + Comment
