@@ -1,40 +1,80 @@
+#[derive(Debug)]
+pub enum Diagramtype {
+    ACTIVITY,
+    USECASE,
+    CLASSES,
+    SEQUENCE,
+    NONE,
+}
 
+#[derive(Debug)]
+#[derive(PartialEq)]
+pub enum Problem {
+    NONE,
+    NOFILE,
+    NOTYPE,
+    NOSTART,
+    WRONGLINE(usize),
+    MISSINGARGUMENTS(usize),
+    NOENDOFSCOPE(usize),
+    UNKNOWN(usize),
+}
+
+#[derive(Debug)]
+pub enum Nodetype {
+    CLASS,
+    ENUM,
+    INTERFACE,
+    ABSTRACT,
+    ANNOTATION,
+    UNKNOWN(usize),
+}
+
+#[derive(Debug)]
+pub enum Conntype {
+    VERERBUNG,
+    INTERFACE,
+    GESTRICHELT,
+    BEINHALTET,
+    KOMPOSITION,
+    AGGREGATION,
+}
 
 pub struct Connection {
-    node1: String, //Nodename 1
-    node2: String, //Nodename 2
-    description: String, //Anmerkungen am Pfeil
-    contype: String, //Verbindungstyp wie in Diagramm evtl ersetzen mit enum
+    pub node1: String, //Nodename 1
+    pub node2: String, //Nodename 2
+    pub description: String, //Anmerkungen am Pfeil
+    pub contype: Conntype, //Verbindungstyp wie in Diagramm
 }
 
 pub struct Node {
     //Fuer Klassen und Anwendungen
-    typus: String, //Nodetyp (Name) evtl erstetzen mit enum
-    name: String, //Name des Nodes
-    stereotype: String, //Stereotyp des Nodes
-    variables: Vec<String>, //Liste mit Variablen
-    methods: Vec<String>, //Liste mit Methoden
+    pub nodetype: Nodetype, //Nodetyp
+    pub name: String, //Name des Nodes
+    pub stereotype: String, //Stereotyp des Nodes
+    pub variables: Vec<String>, //Liste mit Variablen
+    pub methods: Vec<String>, //Liste mit Methoden
 }
 
 pub struct Package {
-    name: String, //Name des Packages
-    nodes: Vec<Node>, //Liste mit allen Nodes im Package
-    connections: Vec<Connection>, //Liste mit allen Connections innerhalb des Packages
+    pub name: String, //Name des Packages
+    pub nodes: Vec<Node>, //Liste mit allen Nodes im Package
+    pub connections: Vec<Connection>, //Liste mit allen Connections innerhalb des Packages
 }
 
 pub struct Participant {
-    name: String, //Name des Participanten
-    comment: String, //Kommentar zum Participanten
+    pub name: String, //Name des Participanten
+    pub comment: String, //Kommentar zum Participanten
 }
 
 pub struct Note {
-    side: String, //Seite der Notitz evtl ersetzen durch enum
-    content: String, //Inhalt der Notitz
+    pub side: String, //Seite der Notitz evtl ersetzen durch enum
+    pub content: String, //Inhalt der Notitz
 }
 
 pub struct Activity {
-    name: String, //Name der Aktivitaet
-    notes: Vec<Note>, //Liste mit Notitzen an der Aktivitaet
+    pub name: String, //Name der Aktivitaet
+    pub notes: Vec<Note>, //Liste mit Notitzen an der Aktivitaet
 }
 
 pub struct Result {
@@ -43,24 +83,24 @@ pub struct Result {
 }
 
 pub struct Condition {
-    name: String, //Name der Bedingung
-    results: Vec<Result>, //Liste mit allen Ergebnissen
+    pub name: String, //Name der Bedingung
+    pub results: Vec<Result>, //Liste mit allen Ergebnissen
 }
 
 pub struct Loop {
-    name: String, //Beschreibung/Bedingung der Schleife
-    do_while: bool, //Gesetzt wenn Schleife do-while
-    activities: Vec<Activity>, //Liste mit Aktivitaeten in der Schleife
+    pub name: String, //Beschreibung/Bedingung der Schleife
+    pub doWhile: bool, //Gesetzt wenn Schleife do-while
+    pub activities: Vec<Activity>, //Liste mit Aktivitaeten in der Schleife
 }
 
 pub struct Parallel {
-    activities: Vec<Activity>, //Liste mit Aktivitaeten, die parallel ablaufen sollen
+    pub activities: Vec<Activity>, //Liste mit Aktivitaeten, die parallel ablaufen sollen
 }
 
 pub struct Diagram {
-    typus: String, //Diagrammtyp wie in Diagramm evtl ersetzen mit enum
-    name: String, //Diagrammname
-    packages: Vec<Package>, //Liste mit allen Packages
-    nodes: Vec<Node>, //Liste mit allen Nodes außerhalb von Packages
-    connections: Vec<Connection>, //Liste mit allen Verbindungen außerhalb von Packages
+    pub problems: Vec<Problem>, //Liste mit aufgetretenden Problemen
+    pub name: String, //Diagrammname
+    pub packages: Vec<Package>, //Liste mit allen Packages
+    pub nodes: Vec<Node>, //Liste mit allen Nodes außerhalb von Packages
+    pub connections: Vec<Connection>, //Liste mit allen Verbindungen außerhalb von Packages
 }
