@@ -40,6 +40,16 @@ pub enum Conntype {
     AGGREGATION,
 }
 
+//zum zeichnen der connections
+pub struct Connpoints{
+    pub start_x:u32,
+    pub start_y:u32,
+    pub end_x:u32,
+    pub end_y:u32,
+    pub connection:Connection,
+}
+
+
 pub struct Connection {
     pub node1: String, //Nodename 1
     pub node2: String, //Nodename 2

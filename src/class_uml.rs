@@ -15,10 +15,45 @@ use structures;
 use std::iter::Iterator;
 use image::Pixel;
 
+//Farben werden häufig genutzt
+/*
+static RED:Rgb = [255u8, 0u8,   0u8];
+static GREEN:Rgb = Rgb([0u8,   255u8, 0u8]);
+static BLUE:Rgb  = Rgb([0u8,   0u8,   255u8]);
+static WHITE:Rgb = Rgb([255u8, 255u8, 255u8]);
+static BLACK:Rgb = Rgb([0u8, 0u8, 0u8]);
+*/
+fn draw_diagramm(dia:structures::Diagram, img:&mut RgbImage){
 
+    let font = Vec::from(include_bytes!("Alef-Regular.ttf") as &[u8]);
+    let font = FontCollection::from_bytes(font).unwrap().into_font().unwrap();
+
+    let mut probtext = 50;
+    draw_text_mut(img,black,probtext,950 ,textsize, stdfont,  "Problem:");
+    probtext += 100;
+
+    for prob in dia.problems{
+        draw_text_mut(img,black,probtext,950 ,textsize, stdfont,  prob as &str);
+        probtext+110;
+    }
+
+
+
+    for pack in dia.packages{
+        draw_package(pack,img);
+    }
+
+}
 
 
 fn draw_package(umlpack:structures::Package,  img:&mut RgbImage){
+
+    let mut connections:Vec<structures::Connpoints>;
+
+    let font = Vec::from(include_bytes!("Alef-Regular.ttf") as &[u8]);
+    let font = FontCollection::from_bytes(font).unwrap().into_font().unwrap();
+
+
 
     //die Pixel Level der Ebenen im moment Feste Werte
     let mut level1 = 100;
@@ -45,9 +80,13 @@ fn draw_package(umlpack:structures::Package,  img:&mut RgbImage){
         let mut not4 = 0;
         for conn in umlpack.connections{
 
-            if(node.name ==conn.node2 && set == 0){
+            if(node.name ==conn.node1){
                 not4 = 1;
-                set = 0;
+
+            }
+            if(node.name ==conn.node2){
+                not1 = 1;
+
             }
 
         }
@@ -65,54 +104,85 @@ fn draw_package(umlpack:structures::Package,  img:&mut RgbImage){
 
     }
 
+    //position für die connections
 
-    let mut pos_W = 0;
-    let mut pos_H = 0;
+    //zeichnen der Klassen
+    let mut pos_W = 50;
+    let mut w_step = 300;
     for node in level1node{
-         draw_classuml(Node,,img);
+         draw_classuml(node,pos_W,level1,img);
+        pos_W += w_step+50;
     }
+    pos_W = 50;
 
     for node in level2node{
-        draw_classuml(Node,,img);
+        draw_classuml(node,pos_W,level2,img);
+        pos_W += w_step+50;
     }
+    pos_W = 50;
 
     for node in level3node{
-        draw_classuml(Node,,img);
+        draw_classuml(node,pos_W,level3,img);
+        pos_W += w_step+50;
     }
+    pos_W = 50;
 
     for node in level4node{
-        draw_classuml(Node,,img);
+        draw_classuml(node,pos_W,level4,img);
+        pos_W += w_step+50;
     }
+
+
+    for conn in umlpack.connections{
+        for node in level1node  {
+            if(conn.node1==node){
+
+            }
+        }
+
+        for node in level2node{
+            if(){
+
+            }
+        }
+
+        for node in level3node{
+            if(){
+
+            }
+        }
+
+        for node in level4node{
+            if(){
+
+            }
+        }
+    }
+
+    for conn in connections {
+        draw_connection(conn,img);
+    }
+
 }
 
 
 
+pub fn draw_connection(connpoints:structures::Connpoints,img:&mut RgbImage,){
 
-    /* if(connection.node2==nodename ){
-    drawuml
-
-    */
-
-
-
-
+    drawing::draw_line_segment_mut(img,(connpoints.start_x as f32,connpoints.start_y as f32),(connpoints.end_x as f32,connpoints.end_y as f32),BLACK);
+}
 
 
 //malen eines einzelnen Klassenobjekts
 //classuml enthält den Inhalt der Klasse
 pub fn draw_classuml(class_node:structures::Node, pos1: u32, pos2: u32, img:&mut RgbImage){
 
-    let red   = Rgb([255u8, 0u8,   0u8]);
-    let green = Rgb([0u8,   255u8, 0u8]);
-    let blue  = Rgb([0u8,   0u8,   255u8]);
-    let white = Rgb([255u8, 255u8, 255u8]);
-    let black = Rgb([0u8, 0u8, 0u8]);
 
     let mut methodline:u32 = 0;
     let mut titleline: u32 = 20;
 
-    let mut rectsize_w:u32 = 100;
-    let mut rectsize_h:u32 = 100;
+    let mut rectsize_w:u32 = 250;
+    let mut rectsize_h:u32 = 50;
 
 
     let font = Vec::from(include_bytes!("Alef-Regular.ttf") as &[u8]);
