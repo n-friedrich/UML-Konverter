@@ -1,3 +1,4 @@
+
 #[derive(Debug,Clone,Copy)]
 pub enum Diagramtype {
     ACTIVITY,
@@ -6,6 +7,7 @@ pub enum Diagramtype {
     SEQUENCE,
     NONE,
 }
+
 
 #[derive(Debug,Clone,Copy)]
 #[derive(PartialEq)]
@@ -20,6 +22,7 @@ pub enum Problem {
     UNKNOWN(usize),
 }
 
+
 #[derive(Debug,Clone,Copy)]
 pub enum Nodetype {
     CLASS,
@@ -29,6 +32,7 @@ pub enum Nodetype {
     ANNOTATION,
     UNKNOWN(usize),
 }
+
 
 #[derive(Debug,Clone,Copy)]
 #[derive(PartialEq)]
@@ -40,8 +44,6 @@ pub enum Conntype {
     KOMPOSITION,
     AGGREGATION,
 }
-
-
 
 
 //zum zeichnen der connections
@@ -59,6 +61,7 @@ pub struct Point{
     pub x:u32,
     pub y:u32
 }
+
 #[derive(Clone)]
 pub struct Connection {
     pub node1: String, //Nodename 1

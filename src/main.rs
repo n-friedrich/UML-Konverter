@@ -1,73 +1,77 @@
-
-extern crate image;
-extern crate imageproc;
-extern crate rusttype;
-
-mod structures;
-mod class_uml;
-
-
-
-use std::path::Path;
-//use imageproc;
-//use imageproc::drawing::draw_hollow_rect_mut;
-//use imageproc::drawing::draw_text_mut;
-use imageproc::rect::Rect;
+extern crate regex;
 use image::{ImageBuffer,Rgb,RgbImage,GenericImage};
 use imageproc::definitions::Image;
-use imageproc::drawing::draw_cross_mut;
-use imageproc::drawing::draw_filled_rect_mut;
-use structures::Nodetype;
 use class_uml::draw_classuml;
-
-
-
+use imageproc::drawing::draw_filled_rect_mut;
 use std::env;
-use imageproc::drawing::draw_text_mut;
-
-
-
+mod structures;
+mod parser;
+mod test;
+//mod regexCollection;
 
 fn main() {
+    let args: Vec<String> = env::args().collect();
+    //test::test_klassendiagramm(args[1].clone(), true);
+  //das Bild
+  
+    
+    
 
-    let red   = Rgb([255u8, 0u8,   0u8]);
-    let green = Rgb([0u8,   255u8, 0u8]);
-    let blue  = Rgb([0u8,   0u8,   255u8]);
-    let white = Rgb([255u8, 255u8, 255u8]);
-
-   // draw_cross_mut(&mut img, white, 5, 5);
-
-
-    //let mut img = GenericImage::new(1600,1000);
-    let vartest = vec!["Test Variable".to_string(), "Test Variable 2".to_string()];
-    let mettest = vec!["Test Methode".to_string(), "Test Methode".to_string()];
-//test node
-
-    let test = structures::Node {
-        nodetype: Nodetype::CLASS,
-        name: String::from("Testklasse"),
-        stereotype: String::from("Hope"),
-        variables: vartest,
-        methods: mettest,
+    println!("Starte Klassendiagrammtest:\n");
+    let success: bool;
+    let d = parser::parse_classes(args[1].clone(), false);
+    let mut diagram = structures::Diagram {
+        problems: Vec::new(),
+        name: String::from("Fail"),
+        packages: Vec::new(),
+        nodes: Vec::new(),
+        connections: Vec::new(),
     };
-   // draw_classuml(test, 100, 100);
+    match d {
+        Ok(di) => {
+            success = true;
+            diagram = di;
+        },
+        Err(e) => {
+            success = false;
+            println!("Kritischer Fehler, der zum vorzeitigen Beenden des Programms geführt hat:");
+            match e {
+                structures::Problem::NOFILE => println!("Die zu bearbeitende Datei konnte nicht gefunden oder geöffnet werden!"),
+                structures::Problem::NOTYPE => println!("In der zu bearbeitenden Datei konnte kein Diagrammtyp gefunden werden!"),
+                structures::Problem::NOSTART => println!("In der zu bearbeitenden Datei konnte kein Startpunkt gefunden werden!"),
+                structures::Problem::NOENDOFSCOPE(line) => println!("In der zu bearbeitenden Datei konnte kein Ende für das Scope,
+                 das in Zeile {} geöffnet wird, gefunden werden!", line),
+                _ => println!("{:?}", e),
+            }
+        },
+    }
+    if success {
+        println!("\nFehlerliste:");
+        for p in diagram.problems {
+            println!("Problem: {:?}", p);
+        }
+        println!("Das Diagramm {} wurde erfolgreich geparsed. Die Bilderstellung wird gestartet...", diagram.name);
+          
+         let white = Rgb([255u8, 255u8, 255u8]);
+         let mut image = RgbImage::new(1600, 1000);
+         let whiteboard = Rect::at(0,0).of_size(1600,1000);
+         draw_filled_rect_mut(&mut image,whiteboard,white);
+         image.save("uml.png").unwrap();
+        /* 
+         * ----------------------------------------------------------------
+         * -#-#-#-#-#- Hier das Diagramm zum Bild parsen lassen -#-#-#-#-#-
+         * ----------------------------------------------------------------
+         */
 
+        //Bei Erfolg:
+        println!("\nDas Bild wurde erfolreich erstellt.");
 
-
-
-
-
-    let mut image = RgbImage::new(1600, 1000);
-    let whiteboard = Rect::at(0,0).of_size(1600,1000);
-    draw_filled_rect_mut(&mut image,whiteboard,white);
-  //  let font = Vec::from(include_bytes!("Alef-Regular.ttf") as &[u8]);
- //   let font = FontCollection::from_bytes(font).unwrap().into_font().unwrap();
-    draw_classuml(test,10,10,&mut image);
- /*
-    let height = 12.4;
-    let scale = Scale { x: height * 2.0, y: height };
-    draw_text_mut(&mut image, Rgb([0u8, 0u8, 255u8]), 0, 0, scale, &font, "Hello, world!");
- */
-    image.save("uml.png").unwrap();
-
+        /* 
+         * ---------------------------------------------------------------------------------------------
+         * -#-#-#-#-#- Hier das Bild öffnen oder, falls nicht möglich, Verweis darauf zeigen -#-#-#-#-#-
+         * ---------------------------------------------------------------------------------------------
+         */
+        
+    }
 }
+

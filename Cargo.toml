@@ -7,3 +7,5 @@ authors = ["agrellmann <andre.grellmann@fh-bielefeld.de>"]
 imageproc = "0.17.0"
 image = "0.20.1"
 rusttype = "0.7.3"
+regex = "1.0.6"
+
