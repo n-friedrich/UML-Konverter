@@ -23,7 +23,7 @@ static BLUE:Rgb  = Rgb([0u8,   0u8,   255u8]);
 static WHITE:Rgb = Rgb([255u8, 255u8, 255u8]);
 static BLACK:Rgb = Rgb([0u8, 0u8, 0u8]);
 */
-fn draw_diagramm(dia: &mut structures::Diagram, img:&mut RgbImage){
+pub fn draw_diagramm(dia: &mut structures::Diagram, img:&mut RgbImage){
 
     let textsize = Scale{x:16 as f32,y:14 as f32};
     let black = Rgb([0u8, 0u8, 0u8]);
@@ -318,21 +318,22 @@ pub fn draw_connection(connpoints:structures::Connpoints,img:&mut RgbImage,){
 pub fn draw_classuml(class_node:structures::Node, pos1: u32, pos2: u32, img:&mut RgbImage)->structures::Point{
 
     let black = Rgb([0u8, 0u8, 0u8]);
+    let newline = 15;
 
-    let mut methodline:u32 = 0;
-    let mut titleline: u32 = 20;
+    let mut titleline: u32 = pos2;
 
     let mut rectsize_w:u32 = 250;
-    let mut rectsize_h:u32 = 50;
+    let mut rectsize_h:u32 = 150;
 
 
     let font = Vec::from(include_bytes!("Alef-Regular.ttf") as &[u8]);
     let font = FontCollection::from_bytes(font).unwrap().into_font().unwrap();
 
 
-    let newline = 15;
-    let mut textline:u32 = titleline+newline;
-    let mut textwidth:u32 = pos1+5;
+    let mut textline:u32 = 0;
+    let mut textwidth:u32 = 0;
+    textline = titleline+25;
+    textwidth = pos1+5;
 
 
     let stdfont=&font;
@@ -340,7 +341,9 @@ pub fn draw_classuml(class_node:structures::Node, pos1: u32, pos2: u32, img:&mut
     let titlesize = Scale{x:17 as f32,y:19 as f32};
 
     //Titel malen
-    draw_text_mut(img,black,textwidth+newline,(pos2 + 2 as u32) ,titlesize, stdfont,  &class_node.name);
+    draw_text_mut(img,black,textwidth+20,(titleline as u32) ,titlesize, stdfont,  &class_node.name);
+
+    drawing::draw_line_segment_mut( img,(pos1 as f32,(titleline+20) as f32),(pos1 as f32 +(rectsize_w-1) as f32,(titleline+20) as f32),black);
 
 
     //Variablenliste
@@ -349,8 +352,13 @@ pub fn draw_classuml(class_node:structures::Node, pos1: u32, pos2: u32, img:&mut
         textline += newline;
     }
 
-    methodline = textline+(newline/2 as u32)-newline ;
-    textline = methodline+newline;
+
+    if(class_node.methods.len()>0){
+        drawing::draw_line_segment_mut( img,(pos1 as f32,textline as f32),(pos1 as f32 +(rectsize_w-1) as f32,textline as f32),black);
+        textline += newline;
+    }
+
+
     //methodenliste
     for line in class_node.methods {
         draw_text_mut(img,black,textwidth,textline ,textsize, stdfont,  &*line);
@@ -359,8 +367,6 @@ pub fn draw_classuml(class_node:structures::Node, pos1: u32, pos2: u32, img:&mut
     }
 
     let rect = Rect::at(pos1 as i32,pos2 as i32).of_size(rectsize_w ,rectsize_h);
-    drawing::draw_line_segment_mut( img,(pos1 as f32,pos2 as f32+titleline as f32),(pos1 as f32 +(rectsize_w-1) as f32,pos2 as f32 + titleline as f32),black);
-    drawing::draw_line_segment_mut( img,(pos1 as f32,pos2 as f32+methodline as f32),(pos1 as f32 +(rectsize_w-1) as f32,pos2 as f32+methodline as f32),black);
     draw_hollow_rect_mut(   img , rect,black);
 
     let mut con_p = structures::Point{ x: (pos1+rectsize_w/2) as u32, y: pos2+rectsize_h};
