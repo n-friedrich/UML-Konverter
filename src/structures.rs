@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug,Clone,Copy)]
 pub enum Diagramtype {
     ACTIVITY,
     USECASE,
@@ -7,7 +7,7 @@ pub enum Diagramtype {
     NONE,
 }
 
-#[derive(Debug)]
+#[derive(Debug,Clone,Copy)]
 #[derive(PartialEq)]
 pub enum Problem {
     NONE,
@@ -20,7 +20,7 @@ pub enum Problem {
     UNKNOWN(usize),
 }
 
-#[derive(Debug)]
+#[derive(Debug,Clone,Copy)]
 pub enum Nodetype {
     CLASS,
     ENUM,
@@ -30,7 +30,8 @@ pub enum Nodetype {
     UNKNOWN(usize),
 }
 
-#[derive(Debug)]
+#[derive(Debug,Clone,Copy)]
+#[derive(PartialEq)]
 pub enum Conntype {
     VERERBUNG,
     INTERFACE,
@@ -40,7 +41,11 @@ pub enum Conntype {
     AGGREGATION,
 }
 
+
+
+
 //zum zeichnen der connections
+#[derive(Clone)]
 pub struct Connpoints{
     pub start_x:u32,
     pub start_y:u32,
@@ -49,7 +54,12 @@ pub struct Connpoints{
     pub connection:Connection,
 }
 
-
+#[derive(Clone)]
+pub struct Point{
+    pub x:u32,
+    pub y:u32
+}
+#[derive(Clone)]
 pub struct Connection {
     pub node1: String, //Nodename 1
     pub node2: String, //Nodename 2
@@ -57,6 +67,7 @@ pub struct Connection {
     pub contype: Conntype, //Verbindungstyp wie in Diagramm
 }
 
+#[derive(Clone)]
 pub struct Node {
     //Fuer Klassen und Anwendungen
     pub nodetype: Nodetype, //Nodetyp
@@ -66,6 +77,7 @@ pub struct Node {
     pub methods: Vec<String>, //Liste mit Methoden
 }
 
+#[derive(Clone)]
 pub struct Package {
     pub name: String, //Name des Packages
     pub nodes: Vec<Node>, //Liste mit allen Nodes im Package
@@ -106,7 +118,7 @@ pub struct Loop {
 pub struct Parallel {
     pub activities: Vec<Activity>, //Liste mit Aktivitaeten, die parallel ablaufen sollen
 }
-
+#[derive(Clone)]
 pub struct Diagram {
     pub problems: Vec<Problem>, //Liste mit aufgetretenden Problemen
     pub name: String, //Diagrammname
