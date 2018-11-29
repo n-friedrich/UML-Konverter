@@ -18,7 +18,7 @@ mod test;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    //test::test_klassendiagramm(args[1].clone(), true);
+    test::test_klassendiagramm(args[1].clone(), true);
   //das Bild
   
 
@@ -26,8 +26,8 @@ fn main() {
 
     println!("Starte Klassendiagrammtest:\n");
     let success: bool;
-   // let d = parser::parse_classes(args[1].clone(), false);
-    let d = parser::parse_classes("docs/Syntaxentwuerfe/KlassendiagrammForTesting.txt".to_string(), false);
+    let d = parser::parse_classes(args[1].clone(), false);
+    //let d = parser::parse_classes("docs/Syntaxentwuerfe/KlassendiagrammForTesting.txt".to_string(), false);
     let mut diagram = structures::Diagram {
         problems: Vec::new(),
         name: String::from("Fail"),

@@ -28,7 +28,7 @@ pub fn draw_diagramm(dia: &mut structures::Diagram, img:&mut RgbImage){
     let textsize = Scale{x:16 as f32,y:14 as f32};
     let black = Rgb([0u8, 0u8, 0u8]);
 
-    let font = Vec::from(include_bytes!("Alef-Regular.ttf") as &[u8]);
+    let font = Vec::from(include_bytes!("framd.ttf") as &[u8]);
     let font = FontCollection::from_bytes(font).unwrap().into_font().unwrap();
 
     let mut probtext = 50;
@@ -56,7 +56,7 @@ fn draw_package( umlpack: &mut structures::Package,  img:&mut RgbImage){
 
     let mut connecti:Vec<structures::Connpoints> = vec![];
 
-    let font = Vec::from(include_bytes!("Alef-Regular.ttf") as &[u8]);
+    let font = Vec::from(include_bytes!("framd.ttf") as &[u8]);
     let font = FontCollection::from_bytes(font).unwrap().into_font().unwrap();
 
 
@@ -326,7 +326,7 @@ pub fn draw_classuml(class_node:structures::Node, pos1: u32, pos2: u32, img:&mut
     let mut rectsize_h:u32 = 150;
 
 
-    let font = Vec::from(include_bytes!("Alef-Regular.ttf") as &[u8]);
+    let font = Vec::from(include_bytes!("framd.ttf") as &[u8]);
     let font = FontCollection::from_bytes(font).unwrap().into_font().unwrap();
 
 
