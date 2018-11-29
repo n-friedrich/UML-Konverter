@@ -1,4 +1,8 @@
 extern crate regex;
+use image::{ImageBuffer,Rgb,RgbImage,GenericImage};
+use imageproc::definitions::Image;
+use class_uml::draw_classuml;
+use imageproc::drawing::draw_filled_rect_mut;
 use std::env;
 mod structures;
 mod parser;
@@ -8,6 +12,10 @@ mod test;
 fn main() {
     let args: Vec<String> = env::args().collect();
     //test::test_klassendiagramm(args[1].clone(), true);
+  //das Bild
+  
+    
+    
 
     println!("Starte Klassendiagrammtest:\n");
     let success: bool;
@@ -43,7 +51,12 @@ fn main() {
             println!("Problem: {:?}", p);
         }
         println!("Das Diagramm {} wurde erfolgreich geparsed. Die Bilderstellung wird gestartet...", diagram.name);
-
+          
+         let white = Rgb([255u8, 255u8, 255u8]);
+         let mut image = RgbImage::new(1600, 1000);
+         let whiteboard = Rect::at(0,0).of_size(1600,1000);
+         draw_filled_rect_mut(&mut image,whiteboard,white);
+         image.save("uml.png").unwrap();
         /* 
          * ----------------------------------------------------------------
          * -#-#-#-#-#- Hier das Diagramm zum Bild parsen lassen -#-#-#-#-#-
@@ -61,3 +74,4 @@ fn main() {
         
     }
 }
+
