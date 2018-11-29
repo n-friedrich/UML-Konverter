@@ -107,13 +107,13 @@ fn draw_package( umlpack: &mut structures::Package,  img:&mut RgbImage){
         }
 
         if(level1node.len()<4 && not1 == 0){
-            level1node.push(node.clone())
+            level1node.push(node.to_owned())
         }else if(level2node.len()<4 && not2 == 0) {
-            level2node.push(node.clone())
+            level2node.push(node.to_owned())
         }else if(level3node.len()<4 && not3 == 0) {
-            level3node.push(node.clone())
+            level3node.push(node.to_owned())
         }else if(level4node.len()<4 && not4 == 0) {
-            level4node.push(node.clone())
+            level4node.push(node.to_owned())
         }
 
 
@@ -126,8 +126,8 @@ fn draw_package( umlpack: &mut structures::Package,  img:&mut RgbImage){
     let mut w_step = 300;
     //let mut i:u32 = 0;
     for node in &level1node{
-        let nodee = node;
-         level1point.push( draw_classuml(node.clone(),pos_w,level1,img) );
+        let nodee = node.to_owned();
+         level1point.push( draw_classuml(nodee,pos_w,level1,img) );
         pos_w += w_step+50;
 
     }
@@ -158,7 +158,7 @@ fn draw_package( umlpack: &mut structures::Package,  img:&mut RgbImage){
 
 
     //umlpack.connections.push(connpoints::structures(lev));
-
+/*
     for conn in &mut umlpack.connections{
         let mut i:usize = 0;
         let mut j:usize = 0;
@@ -166,7 +166,7 @@ fn draw_package( umlpack: &mut structures::Package,  img:&mut RgbImage){
             let node_s =node_s_temp;
             if(conn.node1==node_s.name){
 
-                for node_e in &level2node{
+                for node_e in &mut level2node{
                     if(conn.node2==node_e.name){
                         let temp1 = level1point[i].clone();
                         let temp2 = &level2endpoint[j];
@@ -284,7 +284,7 @@ fn draw_package( umlpack: &mut structures::Package,  img:&mut RgbImage){
     for conn in connecti{
         draw_connection(conn,img);
     }
-
+*/
 }
 
 
