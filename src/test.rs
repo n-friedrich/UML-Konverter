@@ -60,7 +60,7 @@ pub fn test_klassendiagramm(filename: String, debug: bool) {
 
 fn print_nodes(ws: &str, nodes: Vec<structures::Node>) {
     for node in nodes {
-        println!("{}{:?} ", ws, node.nodetype);
+        println!("{}{:?}: {} ", ws, node.nodetype, node.name);
         /*match (node.nodetype) {
             structures::Nodetype::CLASS => print!("Klasse: "),
             structures::Nodetype::ENUM => print!("Enumeration: "),
